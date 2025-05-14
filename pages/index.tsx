@@ -1,115 +1,176 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+// pages/index.tsx
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+type Leader = {
+  nickname: string;
+  trust: number;
+  rank: string;
+};
 
 export default function Home() {
+  const [leaders, setLeaders] = useState<Leader[]>([]);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+
+  useEffect(() => {
+    fetch('https://aegis.onrender.com/leaderboard')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length >= 10) {
+          setLeaders(data.slice(0, 10));
+          setShowLeaderboard(true);
+        }
+      })
+      .catch((err) => console.error('Failed to load leaderboard:', err));
+  }, []);
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen bg-white text-black font-sans">
+      {showLeaderboard && (
+        <section className="py-16 px-4 text-center">
+          <h1 className="text-3xl font-bold mb-6">Top Contributors</h1>
+          <ul className="max-w-xl mx-auto space-y-3">
+            {leaders.map((user, i) => (
+              <li
+                key={user.nickname}
+                className="flex justify-between items-center bg-gray-100 px-4 py-2 rounded shadow"
+              >
+                <span className="font-semibold">{i + 1}. {user.nickname}</span>
+                <span className="text-sm text-gray-600">
+                  {user.rank} • Trust: {user.trust}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Hero */}
+      <section className="py-20 px-4 text-center">
+        <div className="flex justify-center mb-6">
+          <Image src="/logo.png" alt="Intersection Logo" width={120} height={120} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <h1 className="text-5xl font-extrabold tracking-tight mb-4">
+          Intersection
+        </h1>
+        <p className="text-xl text-gray-700 mb-6">
+          One step ahead of every corner.
+        </p>
+        <button className="bg-black text-white px-6 py-3 rounded-full text-lg shadow hover:bg-gray-800 transition">
+          Launching Soon
+        </button>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 px-6 bg-gray-50 text-center">
+        <h2 className="text-3xl font-bold mb-12">How It Works</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto">
+          <div>
+            <div className="text-5xl mb-4">🚗</div>
+            <h3 className="text-xl font-semibold mb-2">Turn on Engage</h3>
+            <p className="text-gray-600">Start the app while driving. It auto-detects intersections.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">🟢</div>
+            <h3 className="text-xl font-semibold mb-2">Get Live Signals</h3>
+            <p className="text-gray-600">See who has the right-of-way in real time.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">⚖️</div>
+            <h3 className="text-xl font-semibold mb-2">Dispute Mistakes</h3>
+            <p className="text-gray-600">If something’s wrong, submit a dispute instantly.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">🏁</div>
+            <h3 className="text-xl font-semibold mb-2">Improve the Network</h3>
+            <p className="text-gray-600">Earn trust points and help train the map.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-20 px-6 bg-white text-center">
+        <h2 className="text-3xl font-bold mb-12">Features</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          <div>
+            <div className="text-5xl mb-4">📡</div>
+            <h3 className="text-xl font-semibold mb-2">Live Signal Guidance</h3>
+            <p className="text-gray-600">See clear, real-time directions at intersections.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">🧠</div>
+            <h3 className="text-xl font-semibold mb-2">AI-Powered Logic</h3>
+            <p className="text-gray-600">Every signal is calculated based on driver flow and patterns.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">🛡️</div>
+            <h3 className="text-xl font-semibold mb-2">Trust-Based Disputes</h3>
+            <p className="text-gray-600">Disputes are ranked by contributor credibility.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">🔒</div>
+            <h3 className="text-xl font-semibold mb-2">Privacy-First Design</h3>
+            <p className="text-gray-600">No location is stored — only verified movement vectors.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">🏆</div>
+            <h3 className="text-xl font-semibold mb-2">Rank & Rewards</h3>
+            <p className="text-gray-600">Get recognized and climb the leaderboard with accurate signals.</p>
+          </div>
+          <div>
+            <div className="text-5xl mb-4">📲</div>
+            <h3 className="text-xl font-semibold mb-2">Lightweight App</h3>
+            <p className="text-gray-600">Optimized for minimal data, battery, and distraction.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 px-6 bg-gray-50 text-left">
+        <h2 className="text-3xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div>
+            <h3 className="text-xl font-semibold mb-2">Is this app legal to use while driving?</h3>
+            <p className="text-gray-600">Yes. Intersection runs in the background and does not require interaction while driving.</p>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-2">How does the app know who has the right of way?</h3>
+            <p className="text-gray-600">It uses driver patterns, trust scores, and dispute validation.</p>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-2">What if the signal is wrong?</h3>
+            <p className="text-gray-600">Submit a dispute. If confirmed, the map updates and your trust score improves.</p>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-2">Does it track or store my GPS data?</h3>
+            <p className="text-gray-600">No — only real-time vector movement is analyzed anonymously.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* About & Contact */}
+      <section className="py-20 px-6 bg-white text-center">
+        <h2 className="text-3xl font-bold mb-8">About the Creator</h2>
+        <div className="flex flex-col items-center space-y-4">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="/DemDaskal.jpeg"
+            alt="Demosthenes Daskaleas"
+            width={120}
+            height={120}
+            className="rounded-full object-cover"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <p className="max-w-xl text-gray-700 text-lg">
+            <strong>Dem Daskal</strong> is a private tour and taxi driver. Intersection was born from driving experience in the Athenian cityscape and a vision for safer streets.
+          </p>
+          <p className="text-blue-600 underline">
+            <a href="mailto:support@intersectionapp.com">support@intersectionapp.com</a>
+          </p>
+          <div className="flex space-x-4 mt-4">
+            <a href="/privacy" className="text-sm text-gray-500 underline">Privacy Policy</a>
+            <a href="/terms" className="text-sm text-gray-500 underline">Terms of Service</a>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
