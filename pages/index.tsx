@@ -1,5 +1,6 @@
 // pages/index.tsx
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type Leader = {
@@ -166,8 +167,12 @@ export default function Home() {
             <a href="mailto:support@intersectionapp.com">support@intersectionapp.com</a>
           </p>
           <div className="flex space-x-4 mt-4">
-            <a href="/privacy" className="text-sm text-gray-500 underline">Privacy Policy</a>
-            <a href="/terms" className="text-sm text-gray-500 underline">Terms of Service</a>
+            <Link href="/privacy" className="text-sm text-gray-500 underline">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-gray-500 underline">
+              Terms of Service
+            </Link>
           </div>
         </div>
       </section>
