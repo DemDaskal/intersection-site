@@ -35,7 +35,7 @@ export default function TermsOfService() {
   
         <h2 className="text-xl font-semibold mt-10 mb-2">No Warranty</h2>
         <p className="mb-6">
-          The app is provided "as is," without any warranty of any kind, either express or implied, including but not limited to fitness for a particular purpose or merchantability.
+          The app is provided &quot;as is,&quot; without any warranty of any kind, either express or implied, including but not limited to fitness for a particular purpose or merchantability.
         </p>
   
         <h2 className="text-xl font-semibold mt-10 mb-2">Changes to Terms</h2>
@@ -50,7 +50,7 @@ export default function TermsOfService() {
   
         <h2 className="text-xl font-semibold mt-10 mb-2">Contact Information</h2>
         <p className="mb-6">
-          Email: <a href="mailto:support@intersectionapp.com" className="text-blue-600 underline">support@intersectionapp.co</a><br />
+          Email: <a href="mailto:support@intersectionapp.com" className="text-blue-600 underline">support@intersectionapp.co</a>
         </p>
       </main>
     );
